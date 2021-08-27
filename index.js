@@ -3,6 +3,8 @@ const http = require("http");
 const config = require('./config/config');
 const { log, validate_api_key } = require('./app/helper');
 
+const movies = require('./app/movies');
+
 const app = express();
 
 app.use(express.json());
@@ -19,6 +21,8 @@ app.use(function (req, res, next) {
 });
 
 const server = http.Server(app);
+
+app.use('/movies', validate_api_key, movies);
 
 server.listen(config.port, () => {
     log(config.name + ' running on port ' + config.port);

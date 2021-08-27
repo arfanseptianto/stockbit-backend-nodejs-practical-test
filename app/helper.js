@@ -23,6 +23,18 @@ module.exports.output = (req, res, status_code, err, data) => {
     res.status(status_code).json(data).send();
 };
 
+module.exports.validate_api_key = (req, res, next) => {
+    const apikey = req.body.apikey || req.query.apikey;
+
+    if (!apikey)
+        return res.status(403).send("An apikey is required for authentication");
+    
+    if (apikey != config.api_key)
+        return res.status(401).send("Invalid apikey");
+
+    return next();
+};
+
 module.exports.error = (value) => {
     console.error('\x1b[41m%s\x1b[0m', util.inspect(value, false, null));
 };
