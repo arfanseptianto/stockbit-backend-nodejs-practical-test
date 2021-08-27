@@ -12,7 +12,7 @@ chai.use(chaiHttp);
 
 describe('API Server', () => {
     describe('GET:/movies/search', () => {
-        it('Must to provide apikey', (done) => {
+        it('Must provide apikey', (done) => {
             chai.request(server)
                 .get('/movies/search/?s='+keyword)
                 .end((err, res) => {
@@ -22,13 +22,23 @@ describe('API Server', () => {
                     done();
                 });
         });
+        it('Must provide searching keywords', (done) => {
+            chai.request(server)
+                .get('/movies/search/?apikey='+apikey)
+                .end((err, res) => {
+                    res.should.have.status(403);
+                    res.body.should.have.property('Response', 'False');
+                    res.body.should.have.property('Error', "Please provide keywords to search");
+                    done();
+                });
+        });
         it('Return the search results', (done) => {
             chai.request(server)
                 .get('/movies/search/?apikey='+apikey+'&s='+keyword)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
-                    res.body.should.have.property('Response', 'True');
+                    res.body.should.have.property('Search');
                     done();
                 });
         });

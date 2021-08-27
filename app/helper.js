@@ -15,7 +15,7 @@ module.exports.output = (req, res, status_code, err, data) => {
     if (temp.length > 200)
         temp = temp.substr(0, 200);
 
-    if(process.env.NODE_ENV != 'testing') {
+    if (process.env.NODE_ENV != 'testing') {
         if (!err) {
             console.log('\x1b[32m%s\x1b[0m', appName + ' | ' + shortUrl + ' (' + elapsedTime + ') | ' + request + ' | ' + temp);
         } else {
@@ -31,7 +31,7 @@ module.exports.validate_api_key = (req, res, next) => {
     const apikey = req.body.apikey || req.query.apikey;
 
     if (!apikey)
-        return res.status(403).json({Response: 'False', Error: "An apikey is required for authentication"}).send();
+        return res.status(403).json({ Response: 'False', Error: "An apikey is required for authentication" }).send();
 
     return next();
 };
@@ -50,13 +50,19 @@ async function log_request(endpoint, parameters, response) {
 }
 
 module.exports.error = (value) => {
+    if (process.env.NODE_ENV == 'testing')
+        return false;
     console.error('\x1b[41m%s\x1b[0m', util.inspect(value, false, null));
 };
 
 module.exports.log = (value) => {
+    if (process.env.NODE_ENV == 'testing')
+        return false;
     console.log('\x1b[32m%s\x1b[0m', util.inspect(value, false, null));
 };
 
 module.exports.info = (value) => {
+    if (process.env.NODE_ENV == 'testing')
+        return false;
     console.log('\x1b[33m%s\x1b[0m', util.inspect(value, false, null));
 };
