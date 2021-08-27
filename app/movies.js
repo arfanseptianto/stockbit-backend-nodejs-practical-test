@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const config = require('../config/config');
-const db = require('../config/database');
 const { output, log, info, error: err } = require('./helper');
 
 router.get('/search', async function (req, res) {
@@ -12,10 +11,9 @@ router.get('/search', async function (req, res) {
             throw { code: '403', message: 'Please provide keywords to search' };
 
         const params = { apikey, s, type, y, r, page, callback, v };
-
         const result = await search_omdb(params);
-
-        if (result.data && result.data.Response == 'False') throw { code: result.data.Code, message: result.data.Error };
+        if (result.data && result.data.Response == 'False')
+            throw { code: result.data.Code, message: result.data.Error };
 
         output(req, res, 200, null, result)
     }
@@ -32,10 +30,9 @@ router.get('/detail', async function (req, res) {
             throw { code: '403', message: 'Please provide valid IMDb ID or movie title to view the detail' };
 
         const params = { apikey, i, t, type, y, plot, r, callback, v };
-
         const result = await search_omdb(params);
-
-        if (result.data && result.data.Response == 'False') throw { code: result.data.Code, message: result.data.Error };
+        if (result.data && result.data.Response == 'False')
+            throw { code: result.data.Code, message: result.data.Error };
 
         output(req, res, 200, null, result)
     }
@@ -46,7 +43,7 @@ router.get('/detail', async function (req, res) {
 })
 
 async function search_omdb(params) {
-    const query = Object.keys(params).filter(key => { return !!params[key] }).map(key => { return key + '=' + (params[key] || '') }).join('&');
+    const query = Object.keys(params).filter(key => !!params[key]).map(key => key + '=' + params[key]).join('&');
     const api_url = config.api_url + '?' + query;
 
     return axios.get(api_url)
