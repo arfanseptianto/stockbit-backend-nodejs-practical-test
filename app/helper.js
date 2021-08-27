@@ -28,9 +28,6 @@ module.exports.validate_api_key = (req, res, next) => {
 
     if (!apikey)
         return res.status(403).send("An apikey is required for authentication");
-    
-    if (apikey != config.api_key)
-        return res.status(401).send("Invalid apikey");
 
     return next();
 };

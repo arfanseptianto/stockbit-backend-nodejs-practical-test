@@ -11,7 +11,6 @@ const config = {
     'port': 3030,
 
     'api_url': 'http://www.omdbapi.com',
-    'api_key': 'faf7e5bb&s'
 }
 
 module.exports = config;
