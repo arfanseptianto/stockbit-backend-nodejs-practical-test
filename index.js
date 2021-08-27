@@ -24,6 +24,6 @@ const server = http.Server(app);
 
 app.use('/movies', validate_api_key, movies);
 
-server.listen(config.port, () => {
+module.exports = server.listen(config.port, () => {
     log(config.name + ' running on port ' + config.port);
 });

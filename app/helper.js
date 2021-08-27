@@ -15,13 +15,15 @@ module.exports.output = (req, res, status_code, err, data) => {
     if (temp.length > 200)
         temp = temp.substr(0, 200);
 
-    if (!err) {
-        console.log('\x1b[32m%s\x1b[0m', appName + ' | ' + shortUrl + ' (' + elapsedTime + ') | ' + request + ' | ' + temp);
-    } else {
-        console.error('\x1b[31m%s\x1b[0m', appName + ' | ' + shortUrl + ' (' + elapsedTime + ') | ' + request + ' | ' + JSON.stringify(err) + ' | ' + temp);
+    if(process.env.NODE_ENV != 'testing') {
+        if (!err) {
+            console.log('\x1b[32m%s\x1b[0m', appName + ' | ' + shortUrl + ' (' + elapsedTime + ') | ' + request + ' | ' + temp);
+        } else {
+            console.error('\x1b[31m%s\x1b[0m', appName + ' | ' + shortUrl + ' (' + elapsedTime + ') | ' + request + ' | ' + JSON.stringify(err) + ' | ' + temp);
+        }
+        log_request(shortUrl, request, temp);
     }
 
-    log_request(shortUrl, request, temp);
     res.status(status_code).json(data).send();
 };
 
@@ -29,7 +31,7 @@ module.exports.validate_api_key = (req, res, next) => {
     const apikey = req.body.apikey || req.query.apikey;
 
     if (!apikey)
-        return res.status(403).send("An apikey is required for authentication");
+        return res.status(403).json({Response: 'False', Error: "An apikey is required for authentication"}).send();
 
     return next();
 };

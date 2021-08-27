@@ -19,13 +19,13 @@ router.get('/search', async function (req, res) {
     }
     catch (error) {
         err(error)
-        output(req, res, (error.sql ? 500 : error.code || 500), error, { Response: false, error: error.message || error })
+        output(req, res, (error.sql ? 500 : error.code || 500), error, { Response: 'False', Error: error.message || error })
     }
 })
 
 router.get('/detail', async function (req, res) {
     try {
-        const { apikey, i, t, type, y, plot, r, callback, v } = req.query.s ? req.query : req.body;
+        const { apikey, i, t, type, y, plot, r, callback, v } = req.query.i || req.query.t ? req.query : req.body;
         if (!(i || t))
             throw { code: '403', message: 'Please provide valid IMDb ID or movie title to view the detail' };
 
@@ -38,7 +38,7 @@ router.get('/detail', async function (req, res) {
     }
     catch (error) {
         err(error)
-        output(req, res, (error.sql ? 500 : error.code || 500), error, { Response: false, error: error.message || error })
+        output(req, res, (error.sql ? 500 : error.code || 500), error, { Response: 'False', Error: error.message || error })
     }
 })
 
